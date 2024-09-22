@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Velha</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Jogo da Velha</h1>
+    <div class="jogo">
+        <div class="tabuleiro">
+            <div class="linha">
+                <div class="celula" id="celula-1"></div>
+                <div class="celula" id="celula-2"></div>
+                <div class="celula" id="celula-3"></div>
+            </div>
+            <div class="linha">
+                <div class="celula" id="celula-4"></div>
+                <div class="celula" id="celula-5"></div>
+                <div class="celula" id="celula-6"></div>
+            </div>
+            <div class="linha">
+                <div class="celula" id="celula-7"></div>
+                <div class="celula" id="celula-8"></div>
+                <div class="celula" id="celula-9"></div>
+            </div>
+        </div>
+        <div class="jogadores">
+            <div class="jogador" id="jogador-1">Jogador 1 (X)</div>
+            <div class="jogador" id="jogador-2">Jogador 2 (O)</div>
+        </div>
+        <button id="reiniciar">Reiniciar</button>
+        <div id="resultado"></div>
+    </div>
+
+    <script>
+        // Código JavaScript para o jogo
+        let jogadorAtual = 1;
+        let celulas = document.querySelectorAll('.celula');
+        let tabuleiro = [
+            ['', '', ''],
+            ['', '', ''],
+            ['', '', '']
+        ];
+
+        celulas.forEach((celula, index) => {
+            celula.addEventListener('click', () => {
+                if (tabuleiro[Math.floor(index / 3)][index % 3] === '') {
+                    tabuleiro[Math.floor(index / 3)][index % 3] = jogadorAtual === 1 ? 'X' : 'O';
+                    celula.textContent = tabuleiro[Math.floor(index / 3)][index % 3];
+                    celula.style.backgroundColor = jogadorAtual === 1 ? '#ff69b4' : '#33cc33';
+                    jogadorAtual = jogadorAtual === 1 ? 2 : 1;
+                    verificarVencedor();
+                }
+            });
+        });
+
+        document.getElementById('reiniciar').addEventListener('click', () => {
+            jogadorAtual = 1;
+            tabuleiro = [
+                ['', '', ''],
+                ['', '', ''],
+                ['', '', '']
+            ];
+            celulas.forEach((celula) => {
+                celula.textContent = '';
+                celula.style.backgroundColor = '';
+            });
+            document.getElementById('resultado').textContent = '';
+        });
+
+        function verificarVencedor() {
+            // Verificar linhas
+            for (let i = 0; i < 3; i++) {
+                if (tabuleiro[i][0] !== '' && tabuleiro[i][0] === tabuleiro[i][1] && tabuleiro[i][1] === tabuleiro[i][2]) {
+                    mostrarVencedor(tabuleiro[i][0]);
+                    return;
+                }
+            }
+
+            // Verificar colunas
+            for (let i = 0; i < 3; i++) {
+                if (tabuleiro[0][i] !== '' && tabuleiro[0][i] === tabuleiro[1][i] && tabuleiro[1][i] === tabuleiro[2][i]) {
+                    mostrarVencedor(tabuleiro[0][i]);
+                    return;
+                }
+            }
+
+            // Verificar diagonais
+            if (tabuleiro[0][0] !== '' && tabuleiro[0][0] === tabuleiro[1][1] && tabuleiro[1][1] === tabuleiro[2][2]) {
+                mostrarVencedor(tabuleiro[0][0]);
+                return;
+            }
+            if (tabuleiro[0][2] !== '' && tabuleiro[0][2] === tabuleiro[1][1] && tabuleiro[1][1] === tabuleiro[2][0]) {
+                mostrarVencedor(tabuleiro[0][2]);
+                return;
+            }
+        }
+
+        function mostrarVencedor(vencedor) {
+            let mensagem = `Parabéns, Jogador ${vencedor} venceu!`;
+            document.getElementById('resultado').textContent = mensagem;
+        }
+    </script>
+</body>
+</html>
